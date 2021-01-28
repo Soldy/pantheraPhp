@@ -18,7 +18,7 @@ trait SqlSecurity {
    * @rotected
    * @return {string} safe string  // the output is a ready to push string.
    */
-    protected function securitys(array $var_array) : string // should have to replace this function
+    protected function securities(array $var_array) : string // should have to replace this function
     {
         $out = "";
         for($i=0;count($var_array)>$i;$i++){

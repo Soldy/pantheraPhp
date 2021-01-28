@@ -23,7 +23,7 @@ class Sql extends SqlAbstract
     {
         // I use . because it's faster
         $sql = '`'. $procedure. '`('; 
-        $sql.= $this->securitys($var_array); 
+        $sql.= $this->securities($var_array); 
         $sql.=')';
         // And its not a prepare syntax jet... because that not a live code
         // That should brake the solid o.
@@ -44,16 +44,13 @@ class Sql extends SqlAbstract
     {
         // I use . because it's faster
         $sql = '`'. $func. '`('; 
-        $sql.= $this->securitys($var_array); 
+        $sql.= $this->securities($var_array); 
         $sql.=')';
         // And its not a prepare syntax jet... because that not a live code
         // That should brake the solid o.
         return $this->query(
            'SELECT '. $sql 
         )[0][$sql]; 
-    }
-    function __construct(){
-        $this->connect();
     }
     function __construct(string $user, string $password, string $host, string $db)
     {
@@ -63,6 +60,7 @@ class Sql extends SqlAbstract
              $host, 
              $db
          );
+         $this->connect();
 
     }
 
