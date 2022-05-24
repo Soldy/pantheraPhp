@@ -19,7 +19,7 @@ class Sql extends SqlAbstract
      * 
      *
      */
-    public function queryProcedure(string $procedure, array $var_array ) 
+    public function queryProcedure(string &$procedure, array &$var_array ) 
     {
         // I use . because it's faster
         $sql = '`'. $procedure. '`('; 
@@ -40,7 +40,7 @@ class Sql extends SqlAbstract
      * 
      *
      */
-    public function queryFunction(string $func, array $var_array ) 
+    public function queryFunction(string &$func, array &$var_array ) 
     {
         // I use . because it's faster
         $sql = '`'. $func. '`('; 
@@ -52,7 +52,7 @@ class Sql extends SqlAbstract
            'SELECT '. $sql 
         )[0][$sql]; 
     }
-    function __construct(string $user, string $password, string $host, string $db)
+    function __construct(string &$user, string &$password, string &$host, string &$db)
     {
          $this->config(
              $user,

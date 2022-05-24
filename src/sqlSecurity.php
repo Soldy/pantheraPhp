@@ -9,7 +9,7 @@ trait SqlSecurity {
    * @rotected
    * @return {string} safe string 
    */
-    protected function security(string $string) : string
+    protected function security(string &$string) : string
     {
         return htmlspecialchars($string, ENT_QUOTES); // not a real full safe
     }
@@ -18,7 +18,7 @@ trait SqlSecurity {
    * @rotected
    * @return {string} safe string  // the output is a ready to push string.
    */
-    protected function securities(array $var_array) : string // should have to replace this function
+    protected function securities(array &$var_array) : string // should have to replace this function
     {
         $out = "";
         for($i=0;count($var_array)>$i;$i++){

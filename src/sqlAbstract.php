@@ -27,7 +27,7 @@ abstract class SqlAbstract
      * @param {string}
      * @protected
      */
-    protected function query(string $query) : array
+    protected function query(string &$query) : array
     {
         $rows = [];
         $res = $this->sql->query($query);
