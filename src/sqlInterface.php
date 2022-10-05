@@ -1,8 +1,9 @@
 <?php
 
+namespace Soldy\PanteraPhp;
 
 interface SqlInterface
 {
-    public function queryProcedure(string $procedure, array $var_array): array
-    public function queryFunction(string $func, array $var_array ): string 
+    public function queryProcedure(string $procedure, array $vars): array
+    public function queryFunction(string $func, array $vars): string
 }

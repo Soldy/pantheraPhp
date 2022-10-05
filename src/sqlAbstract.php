@@ -1,42 +1,56 @@
 <?php
 
-
 namespace Soldy\PanteraPhp;
 
+use Soldy\PantheraPhp\SqlSecurity;
 
-
-abstract class SqlAbstract 
+abstract class SqlAbstract
 {
-    // @object
+    use SqlSecurity;
+
+    // @var {object}
     private $sql;
     // @var {boolean}
-    private $_loaded = false;
+    private $loaded = false;
     // @var {string}
-    private $_username = "";
+    private $username = "";
     // @var {string}
-    private $_password = "";
+    private $password = "";
     // @var {string}
-    private $_host = "";
+    private $host = "";
     // @var {string}
-    private $_database = "";
+    private $database = "";
     // @var {integer}
-    private $_try  = 0;
+    private $try  = 0;
     // @var {integer}
-    private $_try_max  = 0;
-    /*
-     * @param {string}
+    private $try_max  = 0;
+     /* Simple query
+     * @param {string} //way call if procedure, select if function
+     * @param {string} // transcript name
+     * @param {array} variables
      * @protected
+     * @return {array} sql result
+     *
      */
-    protected function query(string &$query) : array
+    private function query(string $way, string &$name, array &$vars): array
     {
-        $rows = [];
-        $res = $this->sql->query($query);
-        if ($this->sql->errno)
-            error_log($this->sql->error, 0);
-        if ($res == false)
-            return [];
-        while ($row = $res->fetch_assoc())
-            $rows[] = $row;
+        $values = $this->securities($vars); // never trust any one ...
+        $sql .= $way;
+        $sql .= ' `';
+        $sql .= $name;
+        $sql .= '`(';
+        for ($i = 0; count($values) > $i; $i++) {
+            if ($i > 0) {
+                 $sql .= ', ';
+            }
+            $sql .= '?';
+        }
+        $sql .= ')';
+        $stmt = $this->sql->prepare($sql);
+        $stmt->bind_param(...$values);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
         $this->sql->close();
         $this->connect();
         return $rows;
@@ -46,37 +60,40 @@ abstract class SqlAbstract
      * @param {string}
      * @param {string}
      * @param {string}
+     * @protected
+     * @return {void}
      *
      */
     protected function config(string $user, string $password, string $host, string $db)
     {
-        $this->_username = $user;
-        $this->_password = $password;
-        $this->_database = $db;
-        $this->_host = $host;
+        $this->username = $user;
+        $this->password = $password;
+        $this->database = $db;
+        $this->host = $host;
     }
     /*
+     * @protected
+     * @return {bool}
      *
      */
-    protected function connect() : bool
+    protected function connect(): bool
     {
-        $this->loaded=true;
+        $this->loaded = true;
         $this->sql = new \mysqli(
-            $this->_host, 
-            $this->_username, 
-            $this->_password, 
-            $this->_database
+            $this->host,
+            $this->username,
+            $this->password,
+            $this->database
         );
-        if ($this->sql->connect_errno){
-            if($this->_try_max > $this->_try){
-                $this->_try++;
+        if ($this->sql->connect_errno) {
+            if ($this->try_max > $this->_try) {
+                $this->try++;
                 return $this->connect();
-            }else{
+            } else {
                 die('sql connection faild');
             }
-        }else{
-            $this->_try=0;
+        } else {
+            $this->try = 0;
         }
     }
 }
-
