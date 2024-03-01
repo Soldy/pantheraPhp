@@ -2,9 +2,10 @@
 
 namespace Soldy\PanteraPhp;
 
+use Soldy\PantheraPhp\SqlInterface;
 use Soldy\PantheraPhp\SqlAbstract;
 
-class Sql extends SqlAbstract
+class Sql extends SqlAbstract implement SqlInterface
 {
     /* this funcion call the functions on the sql
      *
@@ -15,7 +16,7 @@ class Sql extends SqlAbstract
      *
      *
      */
-    public function queryProcedure(string &$procedure, array &$var)
+    public function queryProcedure(string &$procedure, array &$var): mixed
     {
         return $this->query('CALL ', $procedure, $vars);
     }
@@ -28,7 +29,7 @@ class Sql extends SqlAbstract
      *
      *
      */
-    public function queryFunction(string &$func, array &$vars)
+    public function queryFunction(string &$func, array &$vars): string|int
     {
         return $this->query('SELECT ', $procedure, $vars);
     }
